@@ -16,16 +16,10 @@ const WeatherDashboard = () => {
     if (lastCity) {
       fetchWeather(lastCity);
     }
-    console.log(currentWeather?.name);
   }, [unit]);
 
-  useEffect(() => {
-    fetchFavorites();
-  }, [currentWeather?.name]);
-
   const fetchWeather = async (city) => {
-    const apiKey =process.env.REACT_APP_WEATHER_API_KEY;
-    console.log(apiKey)
+    const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
     try {
       const currentWeatherResponse = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${unit}&appid=${apiKey}`
@@ -44,7 +38,6 @@ const WeatherDashboard = () => {
   const fetchFavorites = async () => {
     try {
       const response = await axios.get("http://localhost:3001/favorites");
-      console.log(response);
       setFavorites(response.data);
     } catch (error) {
       console.error("Error fetching favorites", error);
@@ -97,11 +90,13 @@ const WeatherDashboard = () => {
         favorites={favorites}
         removeFavorite={removeFavorite}
       />
-    { currentWeather && (<Favorites
-        favorites={favorites}
-        fetchWeather={fetchWeather}
-        removeFavorite={removeFavorite}
-      />)}
+      {currentWeather && (
+        <Favorites
+          favorites={favorites}
+          fetchWeather={fetchWeather}
+          removeFavorite={removeFavorite}
+        />
+      )}
     </div>
   );
 };
