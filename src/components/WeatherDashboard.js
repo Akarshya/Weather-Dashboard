@@ -17,6 +17,9 @@ const WeatherDashboard = () => {
       fetchWeather(lastCity);
     }
   }, [unit]);
+  useEffect(() => {
+    fetchFavorites();
+  }, [currentWeather?.name]);
 
   const fetchWeather = async (city) => {
     const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
