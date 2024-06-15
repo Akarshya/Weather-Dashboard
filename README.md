@@ -26,7 +26,7 @@ A weather dashboard application that shows the current weather and a 5-day forec
 
 3. Start the JSON server:
     ```bash
-    npm run json-server
+    npm i json-server
     ```
 
 4. Start the React application:
