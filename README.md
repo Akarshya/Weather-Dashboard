@@ -21,6 +21,7 @@ A weather dashboard application that shows the current weather and a 5-day forec
 2. Install dependencies:
     ```bash
     npm install
+    npm i dotenv
     ```
 
 3. Start the JSON server:
@@ -33,7 +34,10 @@ A weather dashboard application that shows the current weather and a 5-day forec
     npm start
     ```
 
-5. Obtain an API key from [OpenWeatherMap](https://home.openweathermap.org/users/sign_up) and replace `'REACT_APP_WEATHER_API_KEY'` in `src/components/WeatherDashboard.js` with your actual API key.
+5. Obtain an API key from [OpenWeatherMap](https://home.openweathermap.org/users/sign_up) and create a `.env` file in the root directory of your project with the following line:
+   ```plaintext
+   REACT_APP_WEATHER_API_KEY=your_api_key_here
+
 
 ## Usage
 - Enter a city name in the search bar and click "Get Weather" to view the current weather and 5-day forecast.
