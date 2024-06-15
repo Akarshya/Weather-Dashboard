@@ -40,7 +40,7 @@ const WeatherDashboard = () => {
 
   const fetchFavorites = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/favorites");
+      const response = await axios.get("https://json-server-8j44.onrender.com/favorites");
       setFavorites(response.data);
     } catch (error) {
       console.error("Error fetching favorites", error);
@@ -49,7 +49,7 @@ const WeatherDashboard = () => {
 
   const addFavorite = async (city) => {
     try {
-      await axios.post("http://localhost:3001/favorites", { city });
+      await axios.post("https://json-server-8j44.onrender.com/favorites", { city });
       fetchFavorites();
     } catch (error) {
       console.error("Error adding favorite", error);
@@ -58,7 +58,7 @@ const WeatherDashboard = () => {
 
   const removeFavorite = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/favorites/${id}`);
+      await axios.delete(`https://json-server-8j44.onrender.com/favorites/${id}`);
       fetchFavorites();
     } catch (error) {
       console.error("Error removing favorite", error);
