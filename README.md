@@ -24,7 +24,7 @@ A weather dashboard application that shows the current weather and a 5-day forec
     npm i dotenv
     ```
 
-3. Start the JSON server:
+3. Install the JSON server:
     ```bash
     npm i json-server
     ```
