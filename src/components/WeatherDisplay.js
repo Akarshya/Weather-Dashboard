@@ -11,11 +11,11 @@ const WeatherDisplay = ({
 }) => {
   const unitSymbol = unit === "imperial" ? "F" : "C";
 
-  const favorite = favorites?.find((fav) => fav.city === currentWeather?.name);
+  const isFavorite = favorites.includes(currentWeather?.name);
 
   const toggleFavorite = () => {
-    if (favorite) {
-      removeFavorite(favorite?.id);
+    if (isFavorite) {
+      removeFavorite(currentWeather?.name);
     } else {
       addFavorite(currentWeather?.name);
     }
@@ -55,7 +55,7 @@ const WeatherDisplay = ({
               />
             </div>
             <button onClick={toggleFavorite} className="absolute top-2 right-2">
-              {favorite ? (
+              {isFavorite ? (
                 <FaHeart size={24} className="text-red-500" />
               ) : (
                 <FaHeart size={24} className="text-white" />

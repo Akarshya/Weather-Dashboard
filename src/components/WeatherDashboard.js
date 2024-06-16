@@ -9,17 +9,38 @@ const WeatherDashboard = () => {
   const [forecast, setForecast] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [unit, setUnit] = useState(localStorage.getItem("unit") || "imperial");
+  const userId = localStorage.getItem("userId") || null;
 
   useEffect(() => {
-    fetchFavorites();
-    const lastCity = localStorage.getItem("lastCity");
-    if (lastCity) {
-      fetchWeather(lastCity);
+    if (!userId) {
+      createUser();
+    } else {
+      fetchFavorites();
+      const lastCity = localStorage.getItem("lastCity");
+      if (lastCity) {
+        fetchWeather(lastCity);
+      }
     }
   }, [unit]);
+
   useEffect(() => {
-    fetchFavorites();
+    if (currentWeather?.name) {
+      fetchFavorites();
+    }
   }, [currentWeather?.name]);
+
+  const createUser = async () => {
+    try {
+      const response = await axios.post("https://json-server-8j44.onrender.com/users", {
+        name: "New User",
+        favorites: []
+      });
+      localStorage.setItem("userId", response.data.id);
+      setFavorites([]);
+    } catch (error) {
+      console.error("Error creating user", error);
+    }
+  };
 
   const fetchWeather = async (city) => {
     const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
@@ -40,25 +61,28 @@ const WeatherDashboard = () => {
 
   const fetchFavorites = async () => {
     try {
-      const response = await axios.get("https://json-server-8j44.onrender.com/favorites");
-      setFavorites(response.data);
+      const response = await axios.get(`https://json-server-8j44.onrender.com/users/${userId}`);
+      setFavorites(response.data.favorites);
     } catch (error) {
       console.error("Error fetching favorites", error);
     }
   };
 
   const addFavorite = async (city) => {
+    if (favorites.includes(city)) return; // Prevent duplicate cities
     try {
-      await axios.post("https://json-server-8j44.onrender.com/favorites", { city });
+      const updatedFavorites = [...favorites, city];
+      await axios.patch(`https://json-server-8j44.onrender.com/users/${userId}`, { favorites: updatedFavorites });
       fetchFavorites();
     } catch (error) {
       console.error("Error adding favorite", error);
     }
   };
 
-  const removeFavorite = async (id) => {
+  const removeFavorite = async (city) => {
     try {
-      await axios.delete(`https://json-server-8j44.onrender.com/favorites/${id}`);
+      const updatedFavorites = favorites.filter(fav => fav !== city);
+      await axios.patch(`https://json-server-8j44.onrender.com/users/${userId}`, { favorites: updatedFavorites });
       fetchFavorites();
     } catch (error) {
       console.error("Error removing favorite", error);
