@@ -11,6 +11,7 @@ const WeatherDashboard = () => {
   const [unit, setUnit] = useState(localStorage.getItem("unit") || "imperial");
   const userId = localStorage.getItem("userId") || null;
 
+  // Create a new user if userId is not present in localStorage
   useEffect(() => {
     if (!userId) {
       createUser();
@@ -23,6 +24,7 @@ const WeatherDashboard = () => {
     }
   }, [unit]);
 
+  // Refetch favorites when the current weather is updated
   useEffect(() => {
     if (currentWeather?.name) {
       fetchFavorites();
@@ -31,17 +33,30 @@ const WeatherDashboard = () => {
 
   const createUser = async () => {
     try {
-      const response = await axios.post("https://json-server-8j44.onrender.com/users", {
-        name: "New User",
-        favorites: []
-      });
+      const response = await axios.post(
+        "https://json-server-8j44.onrender.com/users",
+        {
+          name: "New User",
+          favorites: [],
+        }
+      );
       localStorage.setItem("userId", response.data.id);
       setFavorites([]);
     } catch (error) {
       console.error("Error creating user", error);
     }
   };
+  // function to filter forecast data based on the time of the first object
+  const filterForecastByFirstObjTime = (forecastData) => {
+    if (!forecastData) {
+      return [];
+    }
 
+    const firstObjTime = forecastData[0].dt_txt.split(" ")[1];
+    return forecastData.filter((data) => data.dt_txt.endsWith(firstObjTime));
+  };
+
+  // Fetch weather data for a specific city
   const fetchWeather = async (city) => {
     const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
     try {
@@ -52,7 +67,10 @@ const WeatherDashboard = () => {
         `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=${unit}&appid=${apiKey}`
       );
       setCurrentWeather(currentWeatherResponse.data);
-      setForecast(forecastResponse.data.list.filter((_, idx) => idx % 8 === 0));
+      const filteredForecast = filterForecastByFirstObjTime(
+        forecastResponse?.data?.list
+      );
+      setForecast(filteredForecast);
       localStorage.setItem("lastCity", city);
     } catch (error) {
       console.error("Error fetching weather data", error);
@@ -61,7 +79,9 @@ const WeatherDashboard = () => {
 
   const fetchFavorites = async () => {
     try {
-      const response = await axios.get(`https://json-server-8j44.onrender.com/users/${userId}`);
+      const response = await axios.get(
+        `https://json-server-8j44.onrender.com/users/${userId}`
+      );
       setFavorites(response.data.favorites);
     } catch (error) {
       console.error("Error fetching favorites", error);
@@ -72,7 +92,10 @@ const WeatherDashboard = () => {
     if (favorites.includes(city)) return; // Prevent duplicate cities
     try {
       const updatedFavorites = [...favorites, city];
-      await axios.patch(`https://json-server-8j44.onrender.com/users/${userId}`, { favorites: updatedFavorites });
+      await axios.patch(
+        `https://json-server-8j44.onrender.com/users/${userId}`,
+        { favorites: updatedFavorites }
+      );
       fetchFavorites();
     } catch (error) {
       console.error("Error adding favorite", error);
@@ -81,8 +104,11 @@ const WeatherDashboard = () => {
 
   const removeFavorite = async (city) => {
     try {
-      const updatedFavorites = favorites.filter(fav => fav !== city);
-      await axios.patch(`https://json-server-8j44.onrender.com/users/${userId}`, { favorites: updatedFavorites });
+      const updatedFavorites = favorites.filter((fav) => fav !== city);
+      await axios.patch(
+        `https://json-server-8j44.onrender.com/users/${userId}`,
+        { favorites: updatedFavorites }
+      );
       fetchFavorites();
     } catch (error) {
       console.error("Error removing favorite", error);
