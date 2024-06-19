@@ -8,7 +8,7 @@ const WeatherDashboard = () => {
   const [currentWeather, setCurrentWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
   const [favorites, setFavorites] = useState([]);
-  const [unit, setUnit] = useState(localStorage.getItem("unit") || "imperial");
+  const [unit, setUnit] = useState(localStorage.getItem("unit") || "metric");
   const userId = localStorage.getItem("userId") || null;
 
   // Create a new user if userId is not present in localStorage
