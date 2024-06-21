@@ -58,6 +58,7 @@ const WeatherDashboard = () => {
 
   // Fetch weather data for a specific city
   const fetchWeather = async (city) => {
+    console.log("hi")
     const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
     try {
       const currentWeatherResponse = await axios.get(
@@ -119,10 +120,7 @@ const WeatherDashboard = () => {
     const newUnit = unit === "imperial" ? "metric" : "imperial";
     setUnit(newUnit);
     localStorage.setItem("unit", newUnit);
-    const lastCity = localStorage.getItem("lastCity");
-    if (lastCity) {
-      fetchWeather(lastCity);
-    }
+ 
   };
 
   return (
