@@ -1,5 +1,12 @@
 # Weather Dashboard
 
+## Prerequisites
+Before you begin, ensure you have the following installed:
+
+- [Node.js (v14 or higher)]
+- [npm (v6 or higher)]
+- [Visual Studio Code]
+
 ## Description
 A weather dashboard application that shows the current weather and a 5-day forecast for a given city. Users can manage a list of favorite cities and toggle between Celsius and Fahrenheit.
 
